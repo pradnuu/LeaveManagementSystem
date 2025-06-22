@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Hostel Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Teacher Dashboard</h1>
+            <div class="user-info">
+                Welcome, <span id="teacherNameDisplay">Teacher</span>
+                <button onclick="logout()" class="logout-btn">Logout</button>
+            </div>
+        </div>
+
+        <div class="dashboard-container">
+            <div class="sidebar">
+                <button class="nav-btn active" onclick="showSection('studentList')">
+                    <i class="fas fa-users"></i> All Students
+                </button>
+                <button class="nav-btn" onclick="showSection('pendingRequests')">
+                    <i class="fas fa-file-alt"></i> Pending Requests
+                </button>
+                <button class="nav-btn" onclick="showSection('leaveHistory')">
+                    <i class="fas fa-history"></i> Leave History
+                </button>
+                <button class="nav-btn" onclick="showSection('hostellers')">
+                    <i class="fas fa-home"></i> Hostellers
+                </button>
+                <button class="nav-btn" onclick="showSection('nonHostellers')">
+                    <i class="fas fa-user"></i> Non-Hostellers
+                </button>
+            </div>
+
+            <div class="main-content">
+                <div id="studentList" class="dashboard-section">
+                    <h2>All Students</h2>
+                    <div class="search-bar">
+                        <input type="text" id="studentSearch" placeholder="Search students..." oninput="searchStudents()">
+                    </div>
+                    <div class="student-list-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th onclick="sortStudents('id')">Student ID <i class="fas fa-sort"></i></th>
+                                    <th onclick="sortStudents('name')">Name <i class="fas fa-sort"></i></th>
+                                    <th onclick="sortStudents('department')">Department <i class="fas fa-sort"></i></th>
+                                    <th onclick="sortStudents('year')">Year <i class="fas fa-sort"></i></th>
+                                    <th>Contact</th>
+                                    <th>Parent Contact</th>
+                                    <th onclick="sortStudents('accommodation')">Accommodation <i class="fas fa-sort"></i></th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentListBody">
+                                <!-- Student list will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="pendingRequests" class="dashboard-section" style="display: none;">
+                    <h2>Pending Leave Requests (Non-Hostellers)</h2>
+                    <div class="leave-requests-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Student ID</th>
+                                    <th>Application Date</th>
+                                    <th>Leave Period</th>
+                                    <th>Days</th>
+                                    <th>Reason</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pendingRequestsBody">
+                                <!-- Pending requests will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="leaveHistory" class="dashboard-section" style="display: none;">
+                    <h2>Leave History</h2>
+                    <div class="status-filters">
+                        <button class="filter-btn active" onclick="filterLeaveHistory('all')">All</button>
+                        <button class="filter-btn" onclick="filterLeaveHistory('pending')">Pending</button>
+                        <button class="filter-btn" onclick="filterLeaveHistory('approved')">Approved</button>
+                        <button class="filter-btn" onclick="filterLeaveHistory('rejected')">Rejected</button>
+                    </div>
+                    <div class="leave-history-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Student ID</th>
+                                    <th>Application Date</th>
+                                    <th>Leave Period</th>
+                                    <th>Days</th>
+                                    <th>Reason</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaveHistoryBody">
+                                <!-- Leave history will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="hostellers" class="dashboard-section" style="display: none;">
+                    <h2>Hosteller Students</h2>
+                    <div class="student-list-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Year</th>
+                                    <th>Room No.</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hostellersBody">
+                                <!-- Hosteller students will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="nonHostellers" class="dashboard-section" style="display: none;">
+                    <h2>Non-Hosteller Students</h2>
+                    <div class="student-list-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Year</th>
+                                    <th>Local Address</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="nonHostellersBody">
+                                <!-- Non-hosteller students will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decision Modal -->
+    <div id="remarksModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Add Remarks</h3>
+            <textarea id="remarksText" placeholder="Enter your remarks here..." required></textarea>
+            <div class="modal-buttons">
+                <button onclick="closeModal()" class="cancel-btn">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button onclick="submitDecision()" class="submit-btn" id="modalSubmitBtn">
+                    <i class="fas fa-check"></i> Submit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="teacher-dashboard.js"></script>
+</body>
+
+</html>
